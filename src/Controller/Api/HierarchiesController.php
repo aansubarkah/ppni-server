@@ -93,18 +93,18 @@ class HierarchiesController extends AppController {
 
         if (!empty($query)) {
             $fetchDataOptions['conditions']['LOWER(Hierarchy.name) LIKE'] = '%' . $query . '%';
-    }
-    $fetchDataOptions['conditions']['active'] = true;
+        }
+        $fetchDataOptions['conditions']['active'] = true;
 
-    $hierarchy = $this->Hierarchy->find('all', $fetchDataOptions);
+        $hierarchy = $this->Hierarchy->find('all', $fetchDataOptions);
 
-    if ($weather->count() > 0) {
-        $data = $hierarchy;
-    }
+        if ($weather->count() > 0) {
+            $data = $hierarchy;
+        }
 
-    $this->set([
-        'Hierarchy' => $data,
-        '_serialize' => ['hierarchy']
-    ]);
+        $this->set([
+            'Hierarchy' => $data,
+            '_serialize' => ['hierarchy']
+        ]);
     }
-    }
+}
