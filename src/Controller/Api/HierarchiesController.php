@@ -48,7 +48,7 @@ class HierarchiesController extends AppController {
 
             $fetchDataOptions = [
                 'conditions' => ['active' => true, 'NOT' => ['parent_id' => 0]],
-                'order' => ['parent_id' => 'ASC'],
+                'order' => ['id' => 'ASC'],
                 'limit' => $limit,
                 'page' => $offset
             ];
@@ -72,6 +72,39 @@ class HierarchiesController extends AppController {
                 '_serialize' => ['hierarchies', 'meta']
             ]);
         }
+    }
+
+    /**
+     * jsTree method
+     *
+     * @return void
+     */
+    public function tree()
+    {
+        $query = $this->Hierarchies->find();
+        $query->select(['id', 'parent'=>'parent_id', 'text'=>'name']);
+        $query->where(['active'=>true]);
+
+        $hierarchies=[];
+        foreach($query as $datum){
+            $opened = false;
+            if($datum['id'] == 0) $opened = true;
+
+            if($datum['parent'] == 0){
+                $datum['parent'] = '#';
+                $opened = true;
+            }
+            $hierarchies[] = [
+                'id' => $datum['id'],
+                'parent' => $datum['parent'],
+                'text' => $datum['text'],
+                'state' => ['opened' => $opened]
+            ];
+        }
+        $this->set([
+            'hierarchies' => $hierarchies,
+            '_serialize' => ['hierarchies']
+        ]);
     }
 
     public function checkExistence($name = null, $limit = 25)
