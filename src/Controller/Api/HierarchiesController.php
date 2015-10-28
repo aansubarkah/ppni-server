@@ -28,8 +28,8 @@ class HierarchiesController extends AppController {
             }
         }
 
-        if (isset($this->request->query['searchName'])) {
-            $searchName = trim($this->request->query['searchName']);
+        if (isset($this->request->query['name'])) {
+            $searchName = trim($this->request->query['name']);
             $this->checkExistence($searchName, $limit);
         } else {
             $offset = 0;
@@ -118,25 +118,25 @@ class HierarchiesController extends AppController {
         ];
 
         $fetchDataOptions = [
-            'order' => ['Hierarchy.name' => 'ASC'],
+            'order' => ['name' => 'ASC'],
             'limit' => $limit
         ];
 
         $query = trim(strtolower($name));
 
         if (!empty($query)) {
-            $fetchDataOptions['conditions']['LOWER(Hierarchy.name) LIKE'] = '%' . $query . '%';
+            $fetchDataOptions['conditions']['LOWER(name) LIKE'] = '%' . $query . '%';
         }
         $fetchDataOptions['conditions']['active'] = true;
 
-        $hierarchy = $this->Hierarchy->find('all', $fetchDataOptions);
+        $hierarchy = $this->Hierarchies->find('all', $fetchDataOptions);
 
-        if ($weather->count() > 0) {
+        if ($hierarchy->count() > 0) {
             $data = $hierarchy;
         }
 
         $this->set([
-            'Hierarchy' => $data,
+            'hierarchy' => $data,
             '_serialize' => ['hierarchy']
         ]);
     }
